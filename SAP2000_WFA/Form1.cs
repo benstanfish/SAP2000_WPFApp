@@ -16,5 +16,17 @@ namespace SAP2000_WFA
         {
             InitializeComponent();
         }
+
+        private void ButtonCloseForm_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void ButtonKillSap_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+
     }
 }
