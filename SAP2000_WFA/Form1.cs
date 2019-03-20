@@ -25,6 +25,7 @@ namespace SAP2000_WFA
 
         private void ButtonCloseForm_Click(object sender, EventArgs e)
         {
+
             this.Close();
         }
 
@@ -122,7 +123,8 @@ namespace SAP2000_WFA
                     }
                 }
                 //start SAP2000 application
-                ret = mySapObject.ApplicationStart();
+                ret = mySapObject.ApplicationStart(eUnits.kip_in_F,false);
+                
 
             }
 
@@ -166,7 +168,13 @@ namespace SAP2000_WFA
             }
             */
 
-            ret = mySapModel.File.OpenFile("C:\\Users\\ben.fisher\\Desktop\\test_model_2.sdb");
+
+
+
+            var filePath = ReturnFilePath();
+            ret = mySapModel.File.OpenFile(filePath);
+
+            // ret = mySapModel.File.OpenFile("C:\\Users\\ben.fisher\\Desktop\\test_model_2.sdb");
 
             // MessageBox.Show(mySapModel.PropArea.Count().ToString());
 
@@ -195,32 +203,61 @@ namespace SAP2000_WFA
 
         }
 
-        public static string[] myString(cSapModel model)
+        public static double[] myString(cSapModel model)
         {
             int ret = 0;
             string[] shellNames = new string[0];
             int shellCount = model.AreaObj.Count();
+            string[] shellPressures = new string[0];
+            int numItems = 1;
+            string[] loadPats = new string[0];
+            string[] csys = new string[0];
+            int[] direct = new int[0];
+            double[] dblVal = new double[0];
+
 
             ret = model.AreaObj.GetNameList(ref shellCount, ref shellNames);
+            ret = model.AreaObj.SetLoadUniform("16", "ELF", -2.718, 5, true, "Global");
+            ret = model.AreaObj.GetLoadUniform("16", ref numItems, ref shellNames, ref loadPats,ref csys,ref direct,ref dblVal);
 
-            return shellNames;
+            return dblVal;
         }
 
 
-        public void CreateTableFromArray(string[] myStrings)
+        public void CreateTableFromArray(double[] myStrings)
         {
             DataTable dataTable = new DataTable();
             DataColumn myCol = new DataColumn();
             dataTable.Columns.Add(myCol);
             
-            foreach(string str in myStrings)
+            foreach(double str in myStrings)
             {
-                dataTable.Rows.Add(str);
+                dataTable.Rows.Add(str.ToString());
             }
 
             this.dgvTest.DataSource = dataTable;
 
         }
+
+        public static string ReturnFilePath()
+        {
+            var fileContent = string.Empty;
+            var filePath = string.Empty;
+
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.InitialDirectory = "c:\\";
+                ofd.RestoreDirectory = true;
+
+                if(ofd.ShowDialog() == DialogResult.OK)
+                {
+                    filePath = ofd.FileName;
+                }
+            }
+
+            return filePath;
+        }
+
 
     }
 }
