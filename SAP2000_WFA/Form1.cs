@@ -44,7 +44,7 @@ namespace SAP2000_WFA
 
         private void StartSAP()
         {
-            bool AttachToInstance = false;
+            bool AttachToInstance = true;
             bool SpecifyPath = false;
             string ProgramPath = "C:\\Program Files\\Computers and Structures\\SAP2000 19\\SAP2000.exe";
             string ModelDirectory = "C:\\CSiAPIexample";
@@ -125,7 +125,6 @@ namespace SAP2000_WFA
                 //start SAP2000 application
                 ret = mySapObject.ApplicationStart(eUnits.kip_in_F,false);
                 
-
             }
 
             
@@ -170,9 +169,9 @@ namespace SAP2000_WFA
 
 
 
-
-            var filePath = ReturnFilePath();
-            ret = mySapModel.File.OpenFile(filePath);
+            
+            // var filePath = ReturnFilePath();
+            // ret = mySapModel.File.OpenFile(filePath);
 
             // ret = mySapModel.File.OpenFile("C:\\Users\\ben.fisher\\Desktop\\test_model_2.sdb");
 
@@ -192,15 +191,12 @@ namespace SAP2000_WFA
 
 
             MessageBox.Show("Delayed exit. Press OK to quit.");
-
+            
         }
 
         private void ButtonStartSAP_Click(object sender, EventArgs e)
         {
             StartSAP();
-            
-
-
         }
 
         public static double[] myString(cSapModel model)
