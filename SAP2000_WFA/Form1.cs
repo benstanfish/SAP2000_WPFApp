@@ -136,6 +136,48 @@ namespace SAP2000_WFA
             this.sapApp = mySapObject;
             this.aModel = mySapModel;
 
+
+            // Test Get Object
+            int NumberItems = 0;
+            int[] ObjectType = new int[0];
+            string[] ObjectNames = new string[0];
+
+            ret = mySapModel.SelectObj.GetSelected(ref NumberItems, ref ObjectType, ref ObjectNames);
+
+            CreateTableFromArray(ObjectNames);
+
+
+            // Get points for selected areas
+            string AreaName = string.Empty;
+            int NumberPoints = 0;
+            string[] Points = new string[0];
+
+            string[,] ShellPoints = new string[0,4];
+
+
+            DataTable dataTable = new DataTable();
+            DataColumn myCol = new DataColumn();
+            dataTable.Columns.Add(myCol);
+
+
+            for (int i = 1; i < NumberItems; i++)
+            {
+                ret = mySapModel.AreaObj.GetPoints(ObjectNames[i].ToString(), ref NumberPoints, ref Points);
+                
+                
+                
+                //ShellPoints[i, 1] = ObjectNames[i];
+                //ShellPoints[i, 1] = Points[2];
+                //ShellPoints[i, 2] = Points[2];
+                //ShellPoints[i, 3] = Points[2];
+                //ShellPoints[i, 4] = Points[2];
+
+                MessageBox.Show("Press Enter to Continue Loop");
+
+            }
+
+            // CreatePointTable(ShellPoints);
+
             //initialize model
             //ret = mySapModel.InitializeNewModel((eUnits.kip_in_F));
 
@@ -186,11 +228,11 @@ namespace SAP2000_WFA
             //    MessageBox.Show(str);
             //}
 
-            CreateTableFromArray(myString(mySapModel));
+            // CreateTableFromArray(myString(mySapModel));
 
 
 
-            MessageBox.Show("Delayed exit. Press OK to quit.");
+            // MessageBox.Show("Delayed exit. Press OK to quit.");
             
         }
 
@@ -218,19 +260,61 @@ namespace SAP2000_WFA
 
             return dblVal;
         }
+        public void CreateTableFromArray(string[] myStrings)
+        {
+            DataTable dataTable = new DataTable();
+            DataColumn myCol = new DataColumn();
+            dataTable.Columns.Add(myCol);
+
+            foreach (string str in myStrings)
+            {
+                dataTable.Rows.Add(str.ToString());
+            }
+
+            this.dgvTest.DataSource = dataTable;
+
+        }
+
+        
+        public void CreatePointTable(string[,] shellPoints)
+        {
+            DataTable dataTable = new DataTable();
+            DataColumn myCol = new DataColumn();
+            dataTable.Columns.Add(myCol);
+            dataTable.Columns.Add(myCol);
+            dataTable.Columns.Add(myCol);
+            dataTable.Columns.Add(myCol);
+            dataTable.Columns.Add(myCol);
 
 
-        public void CreateTableFromArray(double[] myStrings)
+            DataRow row = dataTable.NewRow();
+            for (int i = 0; i < shellPoints.GetLength(2); i++)
+            {
+                row[i] = shellPoints[i, 0];
+                row[i] = shellPoints[i, 1];
+                row[i] = shellPoints[i, 2];
+                row[i] = shellPoints[i, 3];
+                row[i] = shellPoints[i, 4];
+                dataTable.Rows.Add(row);
+            }
+
+
+            this.dgvTest.DataSource = dataTable;
+
+
+        }
+        
+
+        public void CreateTableFromArray(double[] myDoubles)
         {
             DataTable dataTable = new DataTable();
             DataColumn myCol = new DataColumn();
             dataTable.Columns.Add(myCol);
             
-            foreach(double str in myStrings)
+            foreach(double str in myDoubles)
             {
                 dataTable.Rows.Add(str.ToString());
             }
-
             this.dgvTest.DataSource = dataTable;
 
         }
