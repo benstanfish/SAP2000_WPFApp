@@ -152,7 +152,7 @@ namespace SAP2000_WFA
             int NumberPoints = 0;
             string[] Points = new string[0];
 
-            string[,] ShellPoints = new string[0,4];
+            string[,] ShellPoints = new string[NumberItems, 4];
 
 
             DataTable dataTable = new DataTable();
@@ -160,20 +160,16 @@ namespace SAP2000_WFA
             dataTable.Columns.Add(myCol);
 
 
-            for (int i = 1; i < NumberItems; i++)
+            for (int i = 0; i < NumberItems; i++)
             {
                 ret = mySapModel.AreaObj.GetPoints(ObjectNames[i].ToString(), ref NumberPoints, ref Points);
-                
-                
-                
-                //ShellPoints[i, 1] = ObjectNames[i];
-                //ShellPoints[i, 1] = Points[2];
-                //ShellPoints[i, 2] = Points[2];
-                //ShellPoints[i, 3] = Points[2];
-                //ShellPoints[i, 4] = Points[2];
+                ShellPoints[i, 0] = ObjectNames[i].ToString();
+                for (int j = 1; j < Points.Length; j++)
+                {
+                    ShellPoints[i, j] = Points[j].ToString();
 
-                MessageBox.Show("Press Enter to Continue Loop");
-
+                }
+                // this.dgvTest.DataSource = ShellPoints;
             }
 
             // CreatePointTable(ShellPoints);
